@@ -6,12 +6,12 @@
 
 Audit release rollback plans for trigger, owner, and data safety details. It solves review drift by turning plain-text plans into deterministic CI-friendly findings.
 
-## Input Contract 3
+## Input Contract
 
 Accepts rollback plan. The reader supports plain text, JSON, JSONL, and CSV so the
 tool can fit into scripts, CI jobs, and review exports.
 
-## CLI Walkthrough 3
+## CLI Walkthrough
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -20,7 +20,7 @@ rollback-plan-check examples/sample.txt --json --fail-on medium
 python -m rollback_plan_check --help
 ```
 
-## Rule Surface 3
+## Rule Surface
 
 | Rule | Severity | Meaning |
 |---|---:|---|
@@ -28,7 +28,7 @@ python -m rollback_plan_check --help
 | `unknown-owner` | medium | rollback owner is missing |
 | `data-loss-risk` | low | data loss risk is unclear |
 
-## Validation Notes 3
+## Validation Notes
 
 ```bash
 ruff check .
