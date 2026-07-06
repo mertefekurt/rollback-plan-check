@@ -1,48 +1,46 @@
-# rollback-plan-check
+# Rollback Plan Check
 
-> Audit release rollback plans for trigger, owner, and data safety details.
+<p align="center">
+  <img src="assets/readme-cover.svg" alt="Rollback Plan Check cover" width="100%" />
+</p>
 
-## CLI contract Overview
+![stack](https://img.shields.io/badge/stack-Python-7c3aed?style=flat-square) ![python](https://img.shields.io/badge/python-3.11-0891b2?style=flat-square) ![license](https://img.shields.io/badge/license-MIT-b45309?style=flat-square) ![ci](https://img.shields.io/badge/ci-GitHub%20Actions-be185d?style=flat-square)
 
-Audit release rollback plans for trigger, owner, and data safety details. It solves review drift by turning plain-text plans into deterministic CI-friendly findings.
+Audit release rollback plans for trigger, owner, and data safety details.
 
-## Input Contract
+## The short version
 
-Accepts rollback plan. The reader supports plain text, JSON, JSONL, and CSV so the
-tool can fit into scripts, CI jobs, and review exports.
+`rollback-plan-check` is intentionally small: feed it a file, get deterministic findings, and decide whether the result should block a merge or just guide cleanup.
 
-## CLI Walkthrough
+## Rule surface
+
+| Rule | Severity | What it catches |
+| --- | --- | --- |
+| `missing-trigger` | high | rollback trigger is missing |
+| `unknown-owner` | medium | rollback owner is missing |
+| `data-loss-risk` | low | data loss risk is unclear |
+
+## Usage
 
 ```bash
 python -m pip install -e ".[dev]"
 rollback-plan-check examples/sample.txt
 rollback-plan-check examples/sample.txt --json --fail-on medium
-python -m rollback_plan_check --help
 ```
 
-## Rule Surface
+## Useful defaults
 
-| Rule | Severity | Meaning |
-|---|---:|---|
-| `missing-trigger` | high | rollback trigger is missing |
-| `unknown-owner` | medium | rollback owner is missing |
-| `data-loss-risk` | low | data loss risk is unclear |
+| Option | Reason |
+| --- | --- |
+| `--json` | machine-readable output for scripts |
+| `--fail-on medium` | stricter CI gate when warnings matter |
+| `--format auto` | let the reader detect text, CSV, JSON, or JSONL |
 
-## Validation Notes
+## Local checks
 
 ```bash
+python -m pip install -e ".[dev]"
 ruff check .
 pytest
 python -m rollback_plan_check --help
 ```
-
-Example risky input:
-
-```text
-rollback trigger missing owner unknown data_loss possible
-```
-
-Architecture: `cli.py` handles arguments, `core.py` reads and evaluates records, and
-`rules.py` keeps the project-specific policy explicit.
-
-License: MIT.
